@@ -4,6 +4,9 @@ const User = require('./models/User');
 const mongoose = require('mongoose');
 const jwt=require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
+const multer = require('multer');
+const uploadMiddleware = multer({ dest: 'uploads/' });
+const fs = require('fs');
 // Set the "strictQuery" option to false
 mongoose.set('strictQuery', false);
 const bcrypt=require("bcryptjs");
@@ -58,6 +61,14 @@ if (passOk) {
       if (err) throw err;
       res.json(info);
     });
+  });
+  app.post('/post', uploadMiddleware.single('file'), async (req,res) => {
+    const {originalname,path} = req.file;
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
+    const newPath = path+'.'+ext;
+    fs.renameSync(path, newPath);
+    res.json({exit});
   });
   
   
