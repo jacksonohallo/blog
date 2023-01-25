@@ -47,6 +47,11 @@ if (passOk) {
   }
 
   });
+
+  app.post('/logout', (req,res) => {
+    res.cookie('token', '').json('ok');
+  });
+  
   app.get('/profile', (req,res) => {
     const {token} = req.cookies;
     jwt.verify(token, secret, {}, (err,info) => {
@@ -54,6 +59,7 @@ if (passOk) {
       res.json(info);
     });
   });
+  
   
 app.listen(4000)
 
